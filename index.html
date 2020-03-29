@@ -3,12 +3,52 @@
   <head>
     <meta charset="utf-8">
     <title>Chinese Checker - A board game</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="utils.js"></script>
     <script src="game.js"></script>
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
+    <div id="app">
+        <div class="board">
+            <div v-for="(line, i) in board" class="line">
+                <div
+                v-for="(col, j) in line"
+                class="col"
+                :class="{'p1': col==1,'p2': col==2, 'common': col == 0}"
+                v-on:click= "handleClick(col, i, j)">
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- page content -->
     <script>
 
+        const chineseChecker = new Vue({
+            el: '#app',
+            data: {
+                board: null,
+                recordP: null,
+                game: new Game()
+            },
+            created: function () {
+                this.game.init()
+                this.board = this.game.board
+            },
+            methods: {
+                handleClick: function (col, x, y) {
+                    if (col == 0 && this.recordP != null) {
+
+                        const newBoard = this.game.swap(x, y, this.recordP[0], this.recordP[1])
+                        this.board = newBoard
+                        Vue.set(this, 'board', newBoard)
+                        console.log(this.board)
+                    } else if (col != 0) {
+                        this.recordP = [x, y]
+                    }
+                },
+            }
+        })
     </script>
   </body>
 </html>

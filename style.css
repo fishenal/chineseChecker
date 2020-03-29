@@ -1,0 +1,31 @@
+body {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+.col {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border: 1px solid #777777;
+    border-radius:20px;
+    margin: 5px;
+    cursor: pointer;
+}
+.line {
+    text-align: center;
+}
+.board {
+    transform: rotate(45deg);
+    margin: 100px;
+}
+.common {
+    background: #ddd;
+}
+.p1 {
+    background: #a00000;
+}
+.p2 {
+    background: #1f01ca;
+}
