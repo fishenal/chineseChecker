@@ -11,14 +11,25 @@
   <body>
     <div id="app">
         <div class="board">
-            <div v-for="(line, i) in board" class="line">
+
                 <div
-                v-for="(col, j) in line"
+                v-for="(point, i) in board"
                 class="col"
-                :class="{'p1': col==1,'p2': col==2, 'common': col == 0}"
-                v-on:click= "handleClick(col, i, j)">
+                :class="{
+                    'p1': point == 1,
+                    'p2': point == 2,
+                    'common': point == 0,
+                    'hovern': point == -1,
+                    'hoverjump': point == -2,
+                    'chosen': i == recordP
+                 }"
+                v-on:click= "handleClick(i)"
+                @mouseenter="handleHover(i, 1)"
+                @mouseleave="handleHover(i, 0)"
+                >
+                 <!-- {{ i }} -->
                 </div>
-            </div>
+
         </div>
     </div>
     <!-- page content -->
@@ -36,15 +47,52 @@
                 this.board = this.game.board
             },
             methods: {
-                handleClick: function (col, x, y) {
-                    if (col == 0 && this.recordP != null) {
+                handleHover: function (x, type) {
+                    // if (type == 0) {
+                    //     this.board = this.game.getBoard()
+                    // } else {
+                    //     // console.log(this.game.nextPoints[x])
+                    //     // console.log(this.game.jumpPoints[x])
+                    //     this.board.forEach((col, i) => {
+                    //         if (this.game.nextPoints[x].indexOf(i) > -1) {
+                    //             this.board[i] = -1
+                    //         }
+                    //         if (this.game.jumpPoints[x].indexOf(i) > -1) {
+                    //             this.board[i] = -2
+                    //         }
+                    //     })
+                    // }
+                    // this.$forceUpdate()
+                },
+                handleClick: function (x) {
+                    if (this.recordP != null) {
+                        // single move
+                        if (this.game.nextPoints[this.recordP].indexOf(x) > -1) {
+                            const v1 = this.board[this.recordP]
+                            this.board.splice(this.recordP, 1, this.board[x])
+                            this.board.splice(x, 1, v1)
+                            // re calculate jump points
+                            this.game.genJumpPoints()
+                        }
 
-                        const newBoard = this.game.swap(x, y, this.recordP[0], this.recordP[1])
-                        this.board = newBoard
-                        Vue.set(this, 'board', newBoard)
-                        console.log(this.board)
-                    } else if (col != 0) {
-                        this.recordP = [x, y]
+                        // jump move
+                        const paths = this.game.findPath(this.recordP, x)
+                        if (paths.length > 1) {
+                            for (let i = paths.length - 1; i > 0; i --) {
+                                setTimeout(() => {
+                                    const startIdx = paths[i]
+                                    const endIdx = paths[i - 1]
+                                    const v1 = this.board[startIdx]
+                                    this.board.splice(startIdx, 1, this.board[endIdx])
+                                    this.board.splice(endIdx, 1, v1)
+                                    // re calculate jump points
+                                    this.game.genJumpPoints()
+                                }, (paths.length - 1 - i) * 100)
+                            }
+                        }
+                        this.recordP = null
+                    } else {
+                        this.recordP = x
                     }
                 },
             }
