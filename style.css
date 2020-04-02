@@ -8,8 +8,8 @@ body {
     width: 40px;
     height: 40px;
     line-height: 40px;
-    border: 1px solid #777777;
-    border-radius:20px;
+    border: 2px solid #fff;
+    border-radius:25px;
     margin: 5px;
     cursor: pointer;
 }
@@ -18,7 +18,10 @@ body {
 }
 .board {
     transform: rotate(45deg);
+    transform-origin: 50% 50%;
     margin: 100px;
+    width: 486px;
+    height: 486px;
 }
 .common {
     background: #ddd;
@@ -28,4 +31,13 @@ body {
 }
 .p2 {
     background: #1f01ca;
+}
+.chosen {
+    border-color: #000;
+}
+.hovern {
+    background: #667575;
+}
+.hoverjump {
+    background: #f1d3a6;
 }

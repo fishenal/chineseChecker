@@ -1,6 +1,11 @@
 const utils = {
     max: 8,
     pLine: 4,
+    swap: (list, p1, p2) => {
+        const v1 = list[p1]
+        list[p1] = list[p2]
+        list[p2] = v1
+    },
     isUndefined: obj => {
         return typeof obj === 'undefined'
     },
