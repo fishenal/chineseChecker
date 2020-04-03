@@ -3,8 +3,8 @@
 - 跳棋游戏 - board game
 - vue.js for UI
 - graph bfs
+Try game: https://fishenal.github.io/chineseChecker/index.html
 
-![demo1](demo1.png)
 ![demo2](demo2.png)
 
-Try game: https://fishenal.github.io/chineseChecker/index.html
+
