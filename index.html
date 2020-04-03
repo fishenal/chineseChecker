@@ -4,47 +4,72 @@
     <meta charset="utf-8">
     <title>Chinese Checker - A board game</title>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-    <script src="utils.js"></script>
+    <!-- <script src="utils.js"></script> -->
     <script src="game.js"></script>
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
     <div id="app">
         <div class="board">
-
+            <div>step: {{ step }}</div>
+            <div
+                v-for="line in restructBoard"
+                class="line"
+            >
                 <div
-                v-for="(point, i) in board"
+                v-for="col in line"
                 class="col"
                 :class="{
-                    'p1': point == 1,
-                    'p2': point == 2,
-                    'common': point == 0,
-                    'hovern': point == -1,
-                    'hoverjump': point == -2,
-                    'chosen': i == recordP
-                 }"
-                v-on:click= "handleClick(i)"
-                @mouseenter="handleHover(i, 1)"
-                @mouseleave="handleHover(i, 0)"
+                    'p1': col.v == 1,
+                    'p2': col.v == 2,
+                    'common': col.v == 0,
+                    'hovern': col.v == -1,
+                    'hoverjump': col.v == -2,
+                    'chosen': col.i == recordP
+                    }"
+                v-on:click= "handleClick(col.i)"
                 >
-                 <!-- {{ i }} -->
                 </div>
-
+            </div>
         </div>
     </div>
     <!-- page content -->
     <script>
-
         const chineseChecker = new Vue({
             el: '#app',
             data: {
                 board: null,
                 recordP: null,
-                game: new Game()
+                game: new Game(),
+                width: 9,
+                step: 0
+
             },
             created: function () {
                 this.game.init()
                 this.board = this.game.board
+            },
+            computed: {
+                restructBoard: function () {
+                    const width = this.width
+                    const restructBoard = new Array(2 * width - 1)
+
+                    for (let i = 0; i < this.board.length; i ++) {
+                        const colIdx = i % width
+                        const rowIdx = Math.floor(i / width)
+                        const newLineIdx = colIdx + rowIdx
+                        if (restructBoard[newLineIdx] == undefined) {
+                            restructBoard[newLineIdx] = []
+                        }
+                        // leftPush cuz loop from right to left
+                        restructBoard[newLineIdx].unshift({
+                            v: this.board[i],
+                            i,
+                        })
+                    }
+                    // console.log(restructBoard)
+                    return restructBoard
+                }
             },
             methods: {
                 handleHover: function (x, type) {
@@ -91,6 +116,14 @@
                             }
                         }
                         this.recordP = null
+                        this.step += 1
+                        const winResult = this.game.checkWin()
+                        if (winResult.p1Win) {
+                            alert('p1 win!')
+                        }
+                        if (winResult.p2Win) {
+                            alert('p2 win!')
+                        }
                     } else {
                         this.recordP = x
                     }

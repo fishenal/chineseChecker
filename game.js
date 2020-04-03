@@ -1,41 +1,31 @@
-// const {
-//     max,
-//     pLine,
-//     isUndefined,
-//     getDownLeft,
-//     getDownRight,
-//     getRight,
-//     getLeft
-// } = utils
-
 const width = 9
 const total = width * width
 class Game {
     constructor() {
-        // this.max = 8
         this.board = new Array(total)
         this.used = []
         this.nextPoints = new Array(total)
         this.jumpPoints = new Array(total)
-        // this.blank = 0
-        // this.pLine = 4
         this.p1 = [
             0,  1,  2,  3,
             9, 10, 11,
             18, 19,
             27
         ]
-        // this.p1 = []
-        this.p2 = []
+        this.p2 = [
+            53,
+            61,62,
+            69,70,71,
+            77,78,79,80
+        ]
+        this.p1Destiny = [...this.p2]
+        this.p2Destiny = [...this.p1]
     }
 
     init = () => {
         this.generateBoard()
         this.genNextPoints()
         this.genJumpPoints()
-        // this.initP1()
-        // this.genNeiber()
-        // this.dfs(this.board[0][0])
     }
 
     getBoard = () => {
@@ -46,11 +36,34 @@ class Game {
         for (let i = 0; i < total; i ++) {
             if (this.p1.indexOf(i) > -1) {
                 this.board[i] = 1
-            } else {
+            } else if(this.p2.indexOf(i) > -1) {
+                this.board[i] = 2
+            }
+            else {
                 this.board[i] = 0
             }
         }
-        console.log(this.board)
+        // console.log(this.board)
+    }
+
+    checkWin = () => {
+        let p1Win = true
+        let p2Win = true
+        for (let i = 0; i < this.p1Destiny.length; i ++) {
+            if (this.board[this.p1Destiny[i]] != 1) {
+                p1Win = false
+                break
+            }
+        }
+        for (let i = 0; i < this.p2Destiny.length; i ++) {
+            if (this.board[this.p2Destiny[i]] != 2) {
+                p2Win = false
+                break
+            }
+        }
+        return {
+            p1Win, p2Win
+        }
     }
 
     genNextPoints = (x, y) => {
@@ -84,7 +97,7 @@ class Game {
             }
             this.nextPoints[idx] = nextPoints
         })
-        console.log(this.nextPoints)
+        // console.log(this.nextPoints)
     }
 
     genJumpPoints = (x, y) => {
@@ -151,8 +164,7 @@ class Game {
 
             this.jumpPoints[idx] = jumpPoints
         })
-        console.log(this.jumpPoints)
-
+        // console.log(this.jumpPoints)
     }
 
     swap = (p1, p2) => {
@@ -177,7 +189,7 @@ class Game {
     bfs = (pIdx, desIdx, searched, prevs) => {
         const dist = new Array(total)
         for (let a = 0; a < total; a ++) {
-            dist[a]  = -1
+            dist[a] = -1
         }
         dist[pIdx] = 0
         searched.push(pIdx)
