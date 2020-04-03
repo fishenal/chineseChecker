@@ -4,5 +4,7 @@
 - vue.js for UI
 - graph bfs
 
+![demo1](https://fishenal.github.io/chineseChecker/demo1.png)
+![demo2](https://fishenal.github.io/chineseChecker/demo2.png)
 
-
+Try game: https://fishenal.github.io/chineseChecker/index.html
